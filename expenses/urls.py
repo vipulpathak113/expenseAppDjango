@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^sheet/(?P<pk>\d+)$', views.SheetDetail.as_view()),
     url(r'^compute', PaymentViews.ComputePayment.as_view()),
     url(r'^compute/(?P<pk>\d+)$', PaymentViews.ComputePayment.as_view()),
+    url(r'^compute/(?P<pk>\d+)&(?P<pageNo>\d+)$', PaymentViews.ComputePayment.as_view()),
     url(r'^compute/delete/', PaymentViews.ComputePayment.as_view()),
     url(r'^$', views.ExpenseDetail.as_view()),
     url(r'^sheet/delete/', views.SheetDetail.as_view()),
