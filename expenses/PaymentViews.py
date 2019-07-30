@@ -14,14 +14,14 @@ from django.db import connection
 from django.core.paginator import Paginator
 
 
-
 class ComputePayment(APIView):
-    def put(self,request):
-            pk = request._request.GET['pk']
-            expenses = Expenses.objects.filter(sheetId_id=pk).values('amount','paidTo',"paidBy")
-            payment=ComputePayment.objects.all()
-            for i in expenses:
-                print(i['amount'])
+    def put(self, request):
+        pk = request._request.GET['pk']
+        expenses = Expenses.objects.filter(sheetId_id=pk).values('amount', 'paidTo', "paidBy")
+        payment = ComputePayment.objects.all()
+        for i in expenses:
+            print(i['amount'])
+
     def get(self, request):
         if request.method == 'GET':
             pk = request._request.GET['pk']
@@ -32,11 +32,23 @@ class ComputePayment(APIView):
 
             paginator = Paginator(expenses, 2)
             page = paginator.page(pageNo)
-            object= page.object_list
+            object = page.object_list
             if expenses:
-                return Response({"expenses":object,"count":count})
+                return Response({"expenses": object, "count": count})
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 
 
+class ExpenseFilter(APIView):
+    def get(self, request):
+        if request.method == 'GET':
+            pk = request._request.GET['pk']
+            expenses = Expenses.objects.filter(paidBy__nickname=pk).values_list("date", "description", "paidBy__nickname",
+                                                                         "amount", "paidTo", "id")
+            print(expenses)
+            if expenses:
+                # serializer = ExpensesSerializer(expenses, many=True)
 
+                return Response(expenses)
+            else:
+                return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
