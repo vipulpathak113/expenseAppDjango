@@ -6,9 +6,11 @@ from rest_framework.views import APIView
 from .models import Expenses
 from .models import Persons
 from .models import SheetData
+from .models import ComputePayment
 from .serializers import ExpensesSerializer
 from .serializers import PersonsSerializer
 from .serializers import SheetDataSerializer
+from .serializers import PaymentSerializer
 
 
 class SheetDetail(APIView):

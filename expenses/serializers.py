@@ -23,3 +23,11 @@ class ExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expenses
         fields = ('id', 'date', 'description', 'paidBy', 'amount', 'paidTo', 'sheetId')
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    paidTo = serializers.JSONField()
+
+    class Meta:
+        model = Expenses
+        fields = ('id','paidBy', 'owes', 'owed', 'owedTo', 'sheetId')

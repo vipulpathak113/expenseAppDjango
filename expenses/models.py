@@ -41,3 +41,6 @@ class ComputePayment(models.Model):
     owes = models.IntegerField(blank=True, null=True)
     owed = models.IntegerField(blank=True, null=True)
     owedTo=models.ForeignKey(Expenses, on_delete=models.CASCADE)
+
+
+

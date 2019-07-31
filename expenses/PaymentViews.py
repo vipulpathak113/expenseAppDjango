@@ -10,6 +10,7 @@ from .models import SheetData
 from .serializers import ExpensesSerializer
 from .serializers import PersonsSerializer
 from .serializers import SheetDataSerializer
+from .serializers import PaymentSerializer
 from django.db import connection
 from django.core.paginator import Paginator
 
@@ -52,3 +53,20 @@ class ExpenseFilter(APIView):
                 return Response(expenses)
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
+
+
+class FilterExpense(APIView):
+    def get(self, request):
+        if request.method == 'GET':
+            pk = request._request.GET['pk']
+            items = request._request.GET['items']
+            expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
+                                                                          "amount", "paidTo", "id")
+            paginator = Paginator(expenses, items)
+            page = paginator.page(1)
+            object = page.object_list
+            if expenses:
+                return Response({"expenses": object})
+            else:
+                return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
+
