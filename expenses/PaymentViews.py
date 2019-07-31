@@ -31,7 +31,7 @@ class ComputePayment(APIView):
                                                                           "amount", "paidTo", "id")
             count = Expenses.objects.filter(sheetId_id=pk).count()
 
-            paginator = Paginator(expenses, 2)
+            paginator = Paginator(expenses,10)
             page = paginator.page(pageNo)
             object = page.object_list
             if expenses:
