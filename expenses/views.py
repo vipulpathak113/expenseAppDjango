@@ -11,6 +11,7 @@ from .serializers import ExpensesSerializer
 from .serializers import PersonsSerializer
 from .serializers import SheetDataSerializer
 from .serializers import PaymentSerializer
+from django.core.paginator import Paginator
 
 
 class SheetDetail(APIView):
@@ -101,13 +102,17 @@ class ExpenseDetail(APIView):
     def get(self, request):
         if request.method == 'GET':
             pk = request._request.GET['pk']
+            pageNo = request._request.GET['pageNo']
             expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
             print(expenses)
+            paginator = Paginator(expenses, 10)
+            page = paginator.page(pageNo)
+            object = page.object_list
             if expenses:
                 # serializer = ExpensesSerializer(expenses, many=True)
 
-                return Response(expenses)
+                return Response(object)
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 

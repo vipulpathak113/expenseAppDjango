@@ -27,9 +27,11 @@ class ComputePayment(APIView):
         if request.method == 'GET':
             pk = request._request.GET['pk']
             pageNo = request._request.GET['pageNo']
-            expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
+            filter = request._request.GET['filter']
+            print(filter)
+            expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
-            count = Expenses.objects.filter(sheetId_id=pk).count()
+            count = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).count()
 
             paginator = Paginator(expenses,10)
             page = paginator.page(pageNo)
@@ -44,13 +46,15 @@ class ExpenseFilter(APIView):
     def get(self, request):
         if request.method == 'GET':
             pk = request._request.GET['pk']
+            pageNo = request._request.GET['pageNo']
             expenses = Expenses.objects.filter(paidBy__nickname=pk).values_list("date", "description", "paidBy__nickname",
                                                                          "amount", "paidTo", "id")
-            print(expenses)
-            if expenses:
-                # serializer = ExpensesSerializer(expenses, many=True)
+            paginator = Paginator(expenses, 10)
+            page = paginator.page(pageNo)
+            object = page.object_list
 
-                return Response(expenses)
+            if expenses:
+                return Response({"expenses":object})
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 
@@ -60,7 +64,8 @@ class FilterExpense(APIView):
         if request.method == 'GET':
             pk = request._request.GET['pk']
             items = request._request.GET['items']
-            expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
+            filter= request._request.GET['filter']
+            expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
             paginator = Paginator(expenses, items)
             page = paginator.page(1)
