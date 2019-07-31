@@ -29,9 +29,13 @@ class ComputePayment(APIView):
             pageNo = request._request.GET['pageNo']
             filter = request._request.GET['filter']
             print(filter)
-            expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
+            if filter == 'all':
+                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id")
+                count = Expenses.objects.filter(sheetId_id=pk).count()
+            else:
+                expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
-            count = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).count()
+                count = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).count()
 
             paginator = Paginator(expenses,10)
             page = paginator.page(pageNo)
@@ -47,14 +51,16 @@ class ExpenseFilter(APIView):
         if request.method == 'GET':
             pk = request._request.GET['pk']
             pageNo = request._request.GET['pageNo']
-            expenses = Expenses.objects.filter(paidBy__nickname=pk).values_list("date", "description", "paidBy__nickname",
+            id= request._request.GET['id']
+            expenses = Expenses.objects.filter(paidBy__nickname=pk,sheetId_id=id).values_list("date", "description", "paidBy__nickname",
                                                                          "amount", "paidTo", "id")
+            count = Expenses.objects.filter(paidBy__nickname=pk,sheetId_id=id).count()
             paginator = Paginator(expenses, 10)
             page = paginator.page(pageNo)
             object = page.object_list
 
             if expenses:
-                return Response({"expenses":object})
+                return Response({"expenses":object,"count": count})
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 
@@ -65,13 +71,18 @@ class FilterExpense(APIView):
             pk = request._request.GET['pk']
             items = request._request.GET['items']
             filter= request._request.GET['filter']
-            expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
+            if filter=='all':
+                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id")
+                count = Expenses.objects.filter(sheetId_id=pk).count()
+            else:
+                expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
+                count = Expenses.objects.filter(sheetId_id=pk, paidBy__nickname=filter).count()
             paginator = Paginator(expenses, items)
             page = paginator.page(1)
             object = page.object_list
             if expenses:
-                return Response({"expenses": object})
+                return Response({"expenses": object,"count": count})
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 

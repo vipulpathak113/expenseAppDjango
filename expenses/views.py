@@ -105,14 +105,15 @@ class ExpenseDetail(APIView):
             pageNo = request._request.GET['pageNo']
             expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
                                                                           "amount", "paidTo", "id")
-            print(expenses)
+            print("pageNo",pageNo)
+            count = Expenses.objects.filter(sheetId_id=pk).count()
             paginator = Paginator(expenses, 10)
             page = paginator.page(pageNo)
             object = page.object_list
             if expenses:
                 # serializer = ExpensesSerializer(expenses, many=True)
 
-                return Response(object)
+                return Response({"expenses":object,"count":count})
             else:
                 return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 
