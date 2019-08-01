@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .models import Expenses
 from .models import Persons
 from .models import SheetData
-from .models import ComputePayment
+from .models import Compute
 from .serializers import ExpensesSerializer
 from .serializers import PersonsSerializer
 from .serializers import SheetDataSerializer
@@ -104,7 +104,7 @@ class ExpenseDetail(APIView):
             pk = request._request.GET['pk']
             pageNo = request._request.GET['pageNo']
             expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
-                                                                          "amount", "paidTo", "id")
+                                                                          "amount", "paidTo", "id").order_by('date')
             print("pageNo",pageNo)
             count = Expenses.objects.filter(sheetId_id=pk).count()
             paginator = Paginator(expenses, 10)

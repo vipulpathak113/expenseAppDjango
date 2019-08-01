@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Expenses
-from .models import ComputePayment
+from .models import Compute
 from .models import Persons
 from .models import SheetData
 from .serializers import ExpensesSerializer
@@ -16,12 +16,15 @@ from django.core.paginator import Paginator
 
 
 class ComputePayment(APIView):
-    def put(self, request):
-        pk = request._request.GET['pk']
-        expenses = Expenses.objects.filter(sheetId_id=pk).values('amount', 'paidTo', "paidBy")
-        payment = ComputePayment.objects.all()
-        for i in expenses:
-            print(i['amount'])
+
+    def post(self, request):
+        if request.method == 'POST':
+            expenseData = request.data
+            expenseData.update({'paidBy_id  ': request.data['paidBy']})
+            print("paidTo",expenseData["paidTo"])
+            for i in expenseData["paidTo"]:
+                pay=Compute(owed=int(expenseData["amount"])/len(expenseData["paidTo"]),sheetId_id=expenseData["sheetId"],owedTo_id=i,paidBy_id=expenseData["paidBy"])
+                pay.save(force_insert=True)
 
     def get(self, request):
         if request.method == 'GET':
@@ -30,11 +33,11 @@ class ComputePayment(APIView):
             filter = request._request.GET['filter']
             print(filter)
             if filter == 'all':
-                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id")
+                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id").order_by('date')
                 count = Expenses.objects.filter(sheetId_id=pk).count()
             else:
                 expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
-                                                                          "amount", "paidTo", "id")
+                                                                          "amount", "paidTo", "id").order_by('date')
                 count = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).count()
 
             paginator = Paginator(expenses,10)
@@ -53,7 +56,7 @@ class ExpenseFilter(APIView):
             pageNo = request._request.GET['pageNo']
             id= request._request.GET['id']
             expenses = Expenses.objects.filter(paidBy__nickname=pk,sheetId_id=id).values_list("date", "description", "paidBy__nickname",
-                                                                         "amount", "paidTo", "id")
+                                                                         "amount", "paidTo", "id").order_by('date')
             count = Expenses.objects.filter(paidBy__nickname=pk,sheetId_id=id).count()
             paginator = Paginator(expenses, 10)
             page = paginator.page(pageNo)
@@ -72,11 +75,11 @@ class FilterExpense(APIView):
             items = request._request.GET['items']
             filter= request._request.GET['filter']
             if filter=='all':
-                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id")
+                expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date","description","paidBy__nickname","amount","paidTo", "id").order_by('date')
                 count = Expenses.objects.filter(sheetId_id=pk).count()
             else:
                 expenses = Expenses.objects.filter(sheetId_id=pk,paidBy__nickname=filter).values_list("date", "description", "paidBy__nickname",
-                                                                          "amount", "paidTo", "id")
+                                                                          "amount", "paidTo", "id").order_by('date')
                 count = Expenses.objects.filter(sheetId_id=pk, paidBy__nickname=filter).count()
             paginator = Paginator(expenses, items)
             page = paginator.page(1)

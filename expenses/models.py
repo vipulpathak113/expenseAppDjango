@@ -34,7 +34,7 @@ class Expenses(models.Model):
     sheetId = models.ForeignKey(SheetData, on_delete=models.CASCADE, null=True, blank=True)
 
 
-class ComputePayment(models.Model):
+class Compute(models.Model):
     id = models.AutoField(primary_key=True)
     sheetId = models.ForeignKey(SheetData, on_delete=models.CASCADE)
     paidBy = models.ForeignKey(Persons, on_delete=models.CASCADE)
