@@ -11,7 +11,7 @@ from .serializers import ExpensesSerializer
 from .serializers import PersonsSerializer
 from .serializers import SheetDataSerializer
 from .serializers import PaymentSerializer
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 
 
 class SheetDetail(APIView):
@@ -108,9 +108,15 @@ class ExpenseDetail(APIView):
             print("pageNo",pageNo)
             count = Expenses.objects.filter(sheetId_id=pk).count()
             paginator = Paginator(expenses, 10)
-            page = paginator.page(pageNo)
-            object = page.object_list
-            if expenses:
+            print("paginator",paginator)
+            try:
+                page = paginator.page(pageNo)
+                object = page.object_list
+            except EmptyPage:
+                page = paginator.page(int(pageNo)-1)
+                object = page.object_list
+
+            if object:
                 # serializer = ExpensesSerializer(expenses, many=True)
 
                 return Response({"expenses":object,"count":count})
