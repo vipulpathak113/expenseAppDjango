@@ -182,5 +182,24 @@ class PaymentDetail(APIView):
             pk = request._request.GET['pk']
             # id = request._request.GET['id']
             amount = Expenses.objects.filter(sheetId_id=pk).aggregate(Sum('amount'))
-            expenses= Expenses.objects.filter(sheetId_id=pk).count()
+            expenses = Expenses.objects.filter(sheetId_id=pk).count()
             return Response({"amount": amount['amount__sum'],"expenses":expenses})
+
+
+class Detail(APIView):
+    def get(self,request):
+        if request.method == 'GET':
+            pk = request._request.GET['pk']
+            persons= Persons.objects.filter(sheetId_id=pk).values_list("id")
+            out = [item for t in persons for item in t]
+            print(out)
+            new = []
+            for item in out:
+                amount = Expenses.objects.filter(sheetId_id=pk, paidBy_id=item).aggregate(Sum('amount'))
+                expenses = Persons.objects.filter(sheetId_id=pk, id=item).values("nickname").distinct()
+                expensesPay = Expenses.objects.filter(sheetId_id=pk, paidBy_id=item).count()
+                new.append("item="+str(item)+","+"amount="+ str(amount['amount__sum'])+ ","+"expensesPay="+str(expensesPay)+","+"paidBy="+expenses[0]['nickname'])
+            print(new)
+            return Response(new)
+
+

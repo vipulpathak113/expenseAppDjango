@@ -26,7 +26,7 @@ class Expenses(models.Model):
     date = models.CharField(max_length=500, blank=True, null=True)
     description = models.CharField(max_length=500, blank=True, null=True)
     paidBy = models.ForeignKey(Persons, on_delete=models.CASCADE)
-    amount = models.IntegerField(blank=True, null=True)
+    amount = models.FloatField(blank=True, null=True)
     paidTo = ListCharField(
         base_field=CharField(max_length=500, blank=True, null=True), max_length=50
     )
