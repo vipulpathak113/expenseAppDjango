@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="80a6bcf8-51ce-4597-af74-387f203a7a3d" name="Default Changelist" comment="" />
+    <list default="true" id="80a6bcf8-51ce-4597-af74-387f203a7a3d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +60,14 @@
       <option name="project" value="LOCAL" />
       <updated>1566064418710</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Created api for payment details">
+      <created>1566064716851</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1566064716851</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -94,6 +103,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Payment view added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Payment view added" />
+    <MESSAGE value="Created api for payment details" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created api for payment details" />
   </component>
 </project>
