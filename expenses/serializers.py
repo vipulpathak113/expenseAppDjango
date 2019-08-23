@@ -8,7 +8,7 @@ from .models import SheetData
 class SheetDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = SheetData
-        fields = ('id', 'display_name', 'description', 'created_date')
+        fields = ('sheet', 'display_name', 'description', 'created_date')
 
 
 class PersonsSerializer(serializers.ModelSerializer):

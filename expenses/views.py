@@ -62,7 +62,7 @@ class PersonDetail(APIView):
 
     def post(self, request):
         if request.method == 'POST':
-            sheetObj = SheetData.objects.filter(id=request.data['sheetId']).last()
+            sheetObj = SheetData.objects.filter(sheet=request.data['sheetId']).last()
             print(sheetObj)
             personData = request.data
             personData.update({'sheetId_id ': sheetObj})
@@ -201,5 +201,17 @@ class Detail(APIView):
                 new.append("item="+str(item)+","+"amount="+ str(amount['amount__sum'])+ ","+"expensesPay="+str(expensesPay)+","+"paidBy="+expenses[0]['nickname'])
             print(new)
             return Response(new)
+
+
+class AllExpense(APIView):
+    def get(self, request):
+        if request.method == 'GET':
+            pk = request._request.GET['pk']
+            expenses = Expenses.objects.filter(sheetId_id=pk).values_list("date", "description", "paidBy__nickname",
+                                                                          "amount", "paidTo", "id").order_by('date')
+            if expenses:
+                return Response(expenses)
+            else:
+                return Response("NO DATA FOUND", status=status.HTTP_204_NO_CONTENT)
 
 

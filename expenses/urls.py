@@ -8,6 +8,8 @@ from . import PaymentViews
 urlpatterns = [
     url(r'^detail', views.Detail.as_view()),
     url(r'^detail/(?P<pk>\d+)$', views.Detail.as_view()),
+    url(r'^all', views.AllExpense.as_view()),
+    url(r'^all/(?P<pk>\d+)$', views.AllExpense.as_view()),
     url(r'^filter', PaymentViews.ExpenseFilter.as_view()),
     url(r'^filter/(?P<pk>\d+)&(?P<pageNo>\d+)$&(?P<id>\d+)', PaymentViews.ExpenseFilter.as_view()),
     url(r'^items', PaymentViews.FilterExpense.as_view()),

@@ -6,7 +6,7 @@ from django_mysql.models import ListCharField
 
 
 class SheetData(models.Model):
-    id = models.AutoField(primary_key=True)
+    sheet = models.CharField(primary_key=True,max_length=200)
     display_name = models.CharField(max_length=200, blank=True, null=True)
     description = models.CharField(max_length=500, blank=True, null=True)
     created_date = models.DateTimeField(default=datetime.datetime.now)
@@ -15,7 +15,7 @@ class SheetData(models.Model):
 class Persons(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, blank=True, null=True)
-    nickname = models.CharField(max_length=200, blank=True, null=True,unique=True)
+    nickname = models.CharField(max_length=200, blank=True, null=True)
     comment = models.CharField(max_length=200, blank=True, null=True)
     created_date = models.DateTimeField(default=datetime.datetime.now)
     sheetId = models.ForeignKey(SheetData, on_delete=models.CASCADE)
